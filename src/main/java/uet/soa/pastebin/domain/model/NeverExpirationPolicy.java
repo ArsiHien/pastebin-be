@@ -5,4 +5,9 @@ public class NeverExpirationPolicy implements ExpirationPolicy {
     public boolean isExpired() {
         return false;
     }
+
+    @Override
+    public ExpirationPolicyType type() {
+        return ExpirationPolicyType.NEVER;
+    }
 }

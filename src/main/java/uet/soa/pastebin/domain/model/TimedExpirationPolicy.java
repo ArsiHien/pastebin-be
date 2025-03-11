@@ -13,4 +13,9 @@ public class TimedExpirationPolicy implements ExpirationPolicy {
     public boolean isExpired() {
         return LocalDate.now().isAfter(expirationTime);
     }
+
+    @Override
+    public ExpirationPolicyType type() {
+        return ExpirationPolicyType.TIMED;
+    }
 }

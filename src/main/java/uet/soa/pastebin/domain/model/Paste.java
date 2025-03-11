@@ -8,19 +8,26 @@ public class Paste {
     private String content;
     private LocalDate createdAt;
     private ExpirationPolicy expirationPolicy;
-    private String url;
+    private URL url;
     private int viewCount;
 
-    public Paste(String content, LocalDate createdAt, ExpirationPolicy expirationPolicy, String id, String url, int viewCount) {
+    private Paste(String id, String content, LocalDate createdAt, ExpirationPolicy expirationPolicy, URL url,
+                  int viewCount) {
+        this.id = id;
         this.content = content;
         this.createdAt = createdAt;
         this.expirationPolicy = expirationPolicy;
-        this.id = id;
         this.url = url;
         this.viewCount = viewCount;
     }
 
-    public void updateViewCount() {
+    public static Paste create(String content, LocalDate createdAt, ExpirationPolicy expirationPolicy) {
+        String id = UUID.randomUUID().toString();
+        URL generatedUrl = URL.generate();
+        return new Paste(id, content, createdAt, expirationPolicy, generatedUrl, 0);
+    }
+
+    public void incrementViewCount() {
         viewCount++;
     }
 

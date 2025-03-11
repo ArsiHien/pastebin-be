@@ -13,6 +13,11 @@ public class BurnAfterReadExpirationPolicy implements ExpirationPolicy {
     }
 
     @Override
+    public ExpirationPolicyType type() {
+        return ExpirationPolicyType.BURN_AFTER_READ;
+    }
+
+    @Override
     public void markAsRead() {
         isRead = true;
     }
