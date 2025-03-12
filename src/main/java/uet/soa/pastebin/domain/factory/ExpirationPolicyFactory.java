@@ -9,7 +9,7 @@ import uet.soa.pastebin.infrastructure.persistence.model.JpaExpirationPolicy;
 import java.time.LocalDateTime;
 
 public class ExpirationPolicyFactory {
-    public static ExpirationPolicy create(String type, LocalDateTime createdAt, String duration) {
+    public static ExpirationPolicy create(String type, String duration) {
         ExpirationPolicy.ExpirationPolicyType policyType = ExpirationPolicy.ExpirationPolicyType.valueOf(type);
         return switch (policyType) {
             case TIMED -> new TimedExpirationPolicy(ExpirationPolicy.ExpirationDuration.fromString(duration));

@@ -41,7 +41,7 @@ public class Paste {
         return expirationPolicy != null && expirationPolicy.isExpired(createdAt);
     }
 
-    private void onAccess() {
+    public void onAccess() {
         incrementViewCount();
         if (expirationPolicy instanceof BurnAfterReadExpirationPolicy policy) {
             policy.markAsRead();
@@ -53,8 +53,11 @@ public class Paste {
     }
 
     public String provideContent() {
-        onAccess();
         return content.reveal();
+    }
+
+    public long totalViews() {
+        return viewCount;
     }
 
     @Getter

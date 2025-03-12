@@ -1,5 +1,6 @@
 package uet.soa.pastebin.application.usecase;
 
+import org.springframework.stereotype.Component;
 import uet.soa.pastebin.application.dto.RetrievePasteResponse;
 import uet.soa.pastebin.domain.model.paste.Paste;
 import uet.soa.pastebin.domain.repository.PasteRepository;
@@ -7,8 +8,7 @@ import uet.soa.pastebin.domain.service.AnalyticsService;
 
 import java.util.Optional;
 
-import java.util.Optional;
-
+@Component
 public class RetrievePasteUseCase {
     private final PasteRepository pasteRepository;
     private final AnalyticsService analyticsService;
@@ -31,15 +31,11 @@ public class RetrievePasteUseCase {
             throw new PasteExpiredException("Paste has expired for URL: " + url);
         }
 
-        String contentValue;
-        contentValue = paste.provideContent();
-
-        if (!paste.isExpired()) {
-            pasteRepository.update(paste);
-        }
+        paste.onAccess();
+        pasteRepository.update(paste);
 
         analyticsService.recordView(paste);
 
-        return new RetrievePasteResponse(contentValue);
+        return new RetrievePasteResponse(paste.provideContent(), paste.totalViews());
     }
 }

@@ -40,10 +40,15 @@ public interface ExpirationPolicy {
         }
 
         public static ExpirationDuration fromString(String value) {
+            System.out.println("Checking duration: " + value);
             return Arrays.stream(values())
-                    .filter(d -> d.durationString.equals(value))
+                    .filter(d -> d.durationString.equalsIgnoreCase(value))
                     .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("Unknown duration: " + value));
+                    .orElseThrow(() -> {
+                        System.out.println("Invalid duration: " + value);
+                        return new IllegalArgumentException("Unknown duration: " + value);
+                    });
         }
+
     }
 }

@@ -1,25 +1,18 @@
 package uet.soa.pastebin.domain.model.policy;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 public class TimedExpirationPolicy implements ExpirationPolicy {
-    private final Duration expirationDuration;
-
-    public TimedExpirationPolicy(Duration expirationDuration) {
-        this.expirationDuration = Objects.requireNonNull(expirationDuration,
-                "Expiration duration cannot be null");
-    }
+    private final ExpirationDuration expirationDuration;
 
     public TimedExpirationPolicy(ExpirationDuration duration) {
-        this(duration.toDuration());
+        this.expirationDuration = duration;
     }
 
     @Override
     public boolean isExpired(LocalDateTime createdAt) {
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime expirationTime = createdAt.plus(expirationDuration);
+        LocalDateTime expirationTime = createdAt.plus(expirationDuration.toDuration());
         return now.isAfter(expirationTime);
     }
 

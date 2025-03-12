@@ -1,5 +1,6 @@
 package uet.soa.pastebin.domain.service;
 
+import org.springframework.stereotype.Service;
 import uet.soa.pastebin.domain.model.analytics.AnalyticsRecord;
 import uet.soa.pastebin.domain.model.paste.Paste;
 import uet.soa.pastebin.domain.repository.AnalyticsRepository;
@@ -7,6 +8,7 @@ import uet.soa.pastebin.domain.repository.AnalyticsRepository;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+@Service
 public class AnalyticsService {
     private final AnalyticsRepository analyticsRepository;
 
