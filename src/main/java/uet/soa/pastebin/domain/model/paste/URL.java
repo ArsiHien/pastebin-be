@@ -1,4 +1,4 @@
-package uet.soa.pastebin.domain.model;
+package uet.soa.pastebin.domain.model.paste;
 
 import java.util.UUID;
 

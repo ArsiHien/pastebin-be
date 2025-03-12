@@ -1,0 +1,29 @@
+package uet.soa.pastebin.domain.service;
+
+import uet.soa.pastebin.domain.model.analytics.AnalyticsRecord;
+import uet.soa.pastebin.domain.model.paste.Paste;
+import uet.soa.pastebin.domain.repository.AnalyticsRepository;
+
+import java.time.LocalDate;
+import java.util.Optional;
+
+public class AnalyticsService {
+    private final AnalyticsRepository analyticsRepository;
+
+    public AnalyticsService(AnalyticsRepository analyticsRepository) {
+        this.analyticsRepository = analyticsRepository;
+    }
+
+    public void recordView(Paste paste) {
+        LocalDate today = LocalDate.now();
+        Optional<AnalyticsRecord> recordOpt = analyticsRepository.findByPasteIdAndDate(paste, today);
+        if (recordOpt.isPresent()) {
+            AnalyticsRecord record = recordOpt.get();
+            record.incrementViewCount();
+            analyticsRepository.update(record);
+        } else {
+            AnalyticsRecord record = new AnalyticsRecord(paste, today, 1);
+            analyticsRepository.save(record);
+        }
+    }
+}

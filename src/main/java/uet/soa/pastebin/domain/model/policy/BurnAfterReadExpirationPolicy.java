@@ -1,4 +1,4 @@
-package uet.soa.pastebin.domain.model;
+package uet.soa.pastebin.domain.model.policy;
 
 public class BurnAfterReadExpirationPolicy implements ExpirationPolicy {
     private boolean isRead;
@@ -17,7 +17,6 @@ public class BurnAfterReadExpirationPolicy implements ExpirationPolicy {
         return ExpirationPolicyType.BURN_AFTER_READ;
     }
 
-    @Override
     public void markAsRead() {
         isRead = true;
     }
