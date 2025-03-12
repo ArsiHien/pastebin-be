@@ -14,6 +14,10 @@ public class URL {
         return new URL(randomStr);
     }
 
+    public static URL of(String value) {
+        return new URL(value);
+    }
+
     public boolean validate() {
         return true;
     }

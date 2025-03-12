@@ -1,5 +1,6 @@
 package uet.soa.pastebin.domain.model.paste;
 
+import lombok.Getter;
 import uet.soa.pastebin.domain.model.policy.BurnAfterReadExpirationPolicy;
 import uet.soa.pastebin.domain.model.policy.ExpirationPolicy;
 
@@ -37,7 +38,7 @@ public class Paste {
     }
 
     public boolean isExpired() {
-        return expirationPolicy != null && expirationPolicy.isExpired();
+        return expirationPolicy != null && expirationPolicy.isExpired(createdAt);
     }
 
     private void onAccess() {
@@ -54,5 +55,34 @@ public class Paste {
     public String provideContent() {
         onAccess();
         return content.reveal();
+    }
+
+    @Getter
+    public static class PasteMemento {
+        private String id;
+        private Content content;
+        private LocalDateTime createdAt;
+        private ExpirationPolicy expirationPolicy;
+        private URL url;
+        private int viewCount;
+
+        public PasteMemento(Content content, LocalDateTime createdAt,
+                            ExpirationPolicy expirationPolicy, String id, URL url, int viewCount) {
+            this.content = content;
+            this.createdAt = createdAt;
+            this.expirationPolicy = expirationPolicy;
+            this.id = id;
+            this.url = url;
+            this.viewCount = viewCount;
+        }
+
+        public Paste restore() {
+            return new Paste(id, content, createdAt, expirationPolicy, url, viewCount);
+        }
+    }
+
+    public PasteMemento createSnapshot() {
+        return new PasteMemento(this.content, this.createdAt,
+                this.expirationPolicy, this.id, this.url, this.viewCount);
     }
 }

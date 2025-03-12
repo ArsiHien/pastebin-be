@@ -1,6 +1,7 @@
 package uet.soa.pastebin.domain.repository;
 
 import uet.soa.pastebin.domain.model.paste.Paste;
+import uet.soa.pastebin.domain.model.paste.URL;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,9 +15,12 @@ public interface PasteRepository {
 
     List<Paste> findExpiredPastes();
 
+    Optional<Paste> findByUrl(URL url);
+
+    List<Paste> findAllExpired();
+
     void update(Paste paste);
 
     void delete(Paste paste);
-
 
 }

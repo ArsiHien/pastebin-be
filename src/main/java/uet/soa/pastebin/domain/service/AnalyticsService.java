@@ -4,7 +4,7 @@ import uet.soa.pastebin.domain.model.analytics.AnalyticsRecord;
 import uet.soa.pastebin.domain.model.paste.Paste;
 import uet.soa.pastebin.domain.repository.AnalyticsRepository;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class AnalyticsService {
@@ -15,7 +15,7 @@ public class AnalyticsService {
     }
 
     public void recordView(Paste paste) {
-        LocalDate today = LocalDate.now();
+        LocalDateTime today = LocalDateTime.now();
         Optional<AnalyticsRecord> recordOpt = analyticsRepository.findByPasteIdAndDate(paste, today);
         if (recordOpt.isPresent()) {
             AnalyticsRecord record = recordOpt.get();
