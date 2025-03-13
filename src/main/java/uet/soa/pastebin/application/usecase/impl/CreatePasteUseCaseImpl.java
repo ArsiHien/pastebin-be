@@ -10,6 +10,8 @@ import uet.soa.pastebin.domain.model.paste.Paste;
 import uet.soa.pastebin.domain.model.policy.ExpirationPolicy;
 import uet.soa.pastebin.domain.repository.PasteRepository;
 
+import java.time.LocalDateTime;
+
 @AllArgsConstructor
 public class CreatePasteUseCaseImpl implements CreatePasteUseCase {
     private final PasteRepository pasteRepository;
@@ -23,7 +25,7 @@ public class CreatePasteUseCaseImpl implements CreatePasteUseCase {
                     request.duration()
             );
 
-            Paste paste = Paste.create(content, request.createdAt(), policy);
+            Paste paste = Paste.create(content, LocalDateTime.now(), policy);
             pasteRepository.save(paste);
 
             return new CreatePasteResponse(paste.publishUrl().toString());

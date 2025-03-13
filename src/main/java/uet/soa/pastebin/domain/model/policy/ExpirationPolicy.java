@@ -6,7 +6,9 @@ import java.util.Arrays;
 
 public interface ExpirationPolicy {
     boolean isExpired(LocalDateTime createdAt);
+
     ExpirationPolicyType type();
+
     String durationAsString();
 
     enum ExpirationPolicyType {
@@ -14,14 +16,14 @@ public interface ExpirationPolicy {
     }
 
     enum ExpirationDuration {
-        TEN_MINUTES(Duration.ofMinutes(10), "10m"),
-        ONE_HOUR(Duration.ofHours(1), "1h"),
-        ONE_DAY(Duration.ofDays(1), "1d"),
-        ONE_WEEK(Duration.ofDays(7), "1w"),
-        TWO_WEEKS(Duration.ofDays(14), "2w"),
-        ONE_MONTH(Duration.ofDays(30), "1m"),  // Approximation
-        SIX_MONTHS(Duration.ofDays(180), "6m"),  // Approximation
-        ONE_YEAR(Duration.ofDays(365), "1y");  // Approximation
+        TEN_MINUTES(Duration.ofMinutes(10), "10minutes"),
+        ONE_HOUR(Duration.ofHours(1), "1hour"),
+        ONE_DAY(Duration.ofDays(1), "1day"),
+        ONE_WEEK(Duration.ofDays(7), "1week"),
+        TWO_WEEKS(Duration.ofDays(14), "2weeks"),
+        ONE_MONTH(Duration.ofDays(30), "1month"),
+        SIX_MONTHS(Duration.ofDays(180), "6months"),
+        ONE_YEAR(Duration.ofDays(365), "1year");
 
         private final Duration duration;
         private final String durationString;
