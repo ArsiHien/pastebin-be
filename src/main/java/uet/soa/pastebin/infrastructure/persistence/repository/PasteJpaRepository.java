@@ -14,6 +14,7 @@ public interface PasteJpaRepository extends JpaRepository<JpaPaste, String> {
 
     @Query(value = """
                 SELECT p FROM JpaPaste p
+                JOIN FETCH p.expirationPolicy
                 WHERE p.expirationPolicy.policyType = 'TIMED'
             """)
     List<JpaPaste> findTimedPastes();

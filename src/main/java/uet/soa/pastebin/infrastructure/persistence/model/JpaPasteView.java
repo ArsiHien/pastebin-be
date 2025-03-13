@@ -3,6 +3,8 @@ package uet.soa.pastebin.infrastructure.persistence.model;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 
@@ -22,6 +24,7 @@ public class JpaPasteView {
     LocalDateTime viewTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "paste_id", insertable = false, updatable = false)
+    @JoinColumn(name = "paste_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     JpaPaste paste;
 }
