@@ -7,12 +7,10 @@ import uet.soa.pastebin.domain.model.paste.Content;
 import uet.soa.pastebin.domain.model.paste.Paste;
 import uet.soa.pastebin.domain.model.paste.URL;
 import uet.soa.pastebin.domain.model.policy.BurnAfterReadExpirationPolicy;
-import uet.soa.pastebin.domain.model.policy.ExpirationPolicy;
 import uet.soa.pastebin.domain.repository.PasteRepository;
 import uet.soa.pastebin.infrastructure.persistence.model.JpaExpirationPolicy;
 import uet.soa.pastebin.infrastructure.persistence.model.JpaPaste;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -44,18 +42,8 @@ public class PasteRepositoryImpl implements PasteRepository {
     }
 
     @Override
-    public List<Paste> findExpiredPastes() {
-        return findAllExpired(); // Delegate for consistency
-    }
-
-    @Override
-    public Optional<Paste> findByUrl(URL url) {
-        return findByUrl(url.toString());
-    }
-
-    @Override
-    public List<Paste> findAllExpired() {
-        return pasteJpaRepository.findExpiredPastes(LocalDateTime.now())
+    public List<Paste> findTimedPastes() {
+        return pasteJpaRepository.findTimedPastes()
                 .stream()
                 .map(this::toDomainPaste)
                 .collect(Collectors.toList());
@@ -80,7 +68,6 @@ public class PasteRepositoryImpl implements PasteRepository {
         JpaExpirationPolicy policy = JpaExpirationPolicy.builder()
                 .policyType(JpaExpirationPolicy.PolicyType.valueOf(memento.getExpirationPolicy().type().name()))
                 .duration(memento.getExpirationPolicy().durationAsString())
-                .expirationTime(calculateExpirationTime(memento))
                 .isRead(memento.getExpirationPolicy() instanceof BurnAfterReadExpirationPolicy &&
                         ((BurnAfterReadExpirationPolicy) memento.getExpirationPolicy()).isRead())
                 .build();
@@ -108,15 +95,5 @@ public class PasteRepositoryImpl implements PasteRepository {
                 jpaPaste.getViewCount()
         );
         return memento.restore();
-    }
-
-    private LocalDateTime calculateExpirationTime(Paste.PasteMemento memento) {
-        String duration = memento.getExpirationPolicy().durationAsString();
-        if (duration == null || memento.getExpirationPolicy().type() == ExpirationPolicy.ExpirationPolicyType.NEVER ||
-                memento.getExpirationPolicy().type() == ExpirationPolicy.ExpirationPolicyType.BURN_AFTER_READ) {
-            return null;
-        }
-        ExpirationPolicy.ExpirationDuration expDuration = ExpirationPolicy.ExpirationDuration.fromString(duration);
-        return memento.getCreatedAt().plus(expDuration.toDuration());
     }
 }

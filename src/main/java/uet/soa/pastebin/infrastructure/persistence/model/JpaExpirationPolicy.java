@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
-
 @Data
 @Builder
 @NoArgsConstructor
@@ -22,7 +20,6 @@ public class JpaExpirationPolicy {
     @Column(nullable = false)
     PolicyType policyType;
     String duration;
-    LocalDateTime expirationTime;
     boolean isRead;
 
     public enum PolicyType {

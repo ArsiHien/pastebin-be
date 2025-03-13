@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import uet.soa.pastebin.infrastructure.persistence.model.JpaPaste;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,7 +12,10 @@ import java.util.Optional;
 public interface PasteJpaRepository extends JpaRepository<JpaPaste, String> {
     Optional<JpaPaste> findByUrl(String url);
 
-    @Query("SELECT p FROM JpaPaste p WHERE p.expirationPolicy.expirationTime " +
-            "IS NOT NULL AND p.expirationPolicy.expirationTime < :now")
-    List<JpaPaste> findExpiredPastes(LocalDateTime now);
+    @Query(value = """
+                SELECT p FROM JpaPaste p
+                WHERE p.expirationPolicy.policyType = 'TIMED'
+            """)
+    List<JpaPaste> findTimedPastes();
+
 }

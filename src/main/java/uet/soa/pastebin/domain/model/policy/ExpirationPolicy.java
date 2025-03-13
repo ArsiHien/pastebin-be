@@ -45,9 +45,7 @@ public interface ExpirationPolicy {
             return Arrays.stream(values())
                     .filter(d -> d.durationString.equalsIgnoreCase(value))
                     .findFirst()
-                    .orElseThrow(() -> {
-                        return new IllegalArgumentException("Unknown duration: " + value);
-                    });
+                    .orElseThrow(() -> new IllegalArgumentException("Unknown duration: " + value));
         }
 
     }
