@@ -5,16 +5,18 @@ import uet.soa.pastebin.application.dto.RetrievePasteResponse;
 import uet.soa.pastebin.application.usecase.PasteExpiredException;
 import uet.soa.pastebin.application.usecase.PasteNotFoundException;
 import uet.soa.pastebin.application.usecase.RetrievePasteUseCase;
+import uet.soa.pastebin.domain.model.analytics.Record;
 import uet.soa.pastebin.domain.model.paste.Paste;
 import uet.soa.pastebin.domain.repository.PasteRepository;
-import uet.soa.pastebin.domain.service.AnalyticsService;
+import uet.soa.pastebin.domain.repository.RecordRepository;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @AllArgsConstructor
 public class RetrievePasteUseCaseImpl implements RetrievePasteUseCase {
     private final PasteRepository pasteRepository;
-    private final AnalyticsService analyticsService;
+    private final RecordRepository recordRepository;
 
     @Override
     public RetrievePasteResponse execute(String url) throws PasteNotFoundException, PasteExpiredException {
@@ -33,11 +35,12 @@ public class RetrievePasteUseCaseImpl implements RetrievePasteUseCase {
         paste.onAccess();
         pasteRepository.update(paste);
 
-        analyticsService.recordView(paste);
+        recordRepository.save(new Record(paste, LocalDateTime.now()));
 
         String remainingTime = paste.calculateTimeUntilExpiration();
 
-        return new RetrievePasteResponse(paste.provideContent(),
+        return new RetrievePasteResponse(paste.publishUrl().toString(),
+                paste.provideContent(),
                 paste.totalViews(), remainingTime);
     }
 }

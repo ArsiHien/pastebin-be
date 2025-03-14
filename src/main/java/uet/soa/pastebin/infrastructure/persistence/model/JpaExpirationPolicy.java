@@ -20,7 +20,6 @@ public class JpaExpirationPolicy {
     @Column(nullable = false)
     PolicyType policyType;
     String duration;
-    boolean isRead;
 
     public enum PolicyType {
         TIMED, NEVER, BURN_AFTER_READ

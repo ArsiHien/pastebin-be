@@ -15,15 +15,16 @@ import java.time.LocalDateTime;
 @Table(name = "pastes")
 public class JpaPaste {
     @Id
-    String id;
+    @Column(name = "url", nullable = false, unique = true)
+    String url;
+
     @Lob
     String content;
-    String url;
     LocalDateTime createdAt;
-
     int viewCount;
+    boolean isRead;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "expiration_policy_id")
     JpaExpirationPolicy expirationPolicy;
 }

@@ -6,20 +6,17 @@ import uet.soa.pastebin.domain.model.policy.ExpirationPolicy;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 public class Paste {
-    private String id;
+    private URL url;
     private Content content;
     private LocalDateTime createdAt;
     private ExpirationPolicy expirationPolicy;
-    private URL url;
     private int viewCount;
 
-    private Paste(String id, Content content, LocalDateTime createdAt,
+    private Paste(Content content, LocalDateTime createdAt,
                   ExpirationPolicy expirationPolicy, URL url,
                   int viewCount) {
-        this.id = id;
         this.content = content;
         this.createdAt = createdAt;
         this.expirationPolicy = expirationPolicy;
@@ -29,9 +26,8 @@ public class Paste {
 
     public static Paste create(Content content, LocalDateTime createdAt,
                                ExpirationPolicy expirationPolicy) {
-        String id = UUID.randomUUID().toString();
         URL generatedUrl = URL.generate();
-        return new Paste(id, content, createdAt, expirationPolicy, generatedUrl, 0);
+        return new Paste(content, createdAt, expirationPolicy, generatedUrl, 0);
     }
 
     public void incrementViewCount() {
@@ -96,7 +92,6 @@ public class Paste {
 
     @Getter
     public static class PasteMemento {
-        private String id;
         private Content content;
         private LocalDateTime createdAt;
         private ExpirationPolicy expirationPolicy;
@@ -104,22 +99,21 @@ public class Paste {
         private int viewCount;
 
         public PasteMemento(Content content, LocalDateTime createdAt,
-                            ExpirationPolicy expirationPolicy, String id, URL url, int viewCount) {
+                            ExpirationPolicy expirationPolicy, URL url, int viewCount) {
             this.content = content;
             this.createdAt = createdAt;
             this.expirationPolicy = expirationPolicy;
-            this.id = id;
             this.url = url;
             this.viewCount = viewCount;
         }
 
         public Paste restore() {
-            return new Paste(id, content, createdAt, expirationPolicy, url, viewCount);
+            return new Paste(content, createdAt, expirationPolicy, url, viewCount);
         }
     }
 
     public PasteMemento createSnapshot() {
         return new PasteMemento(this.content, this.createdAt,
-                this.expirationPolicy, this.id, this.url, this.viewCount);
+                this.expirationPolicy, this.url, this.viewCount);
     }
 }

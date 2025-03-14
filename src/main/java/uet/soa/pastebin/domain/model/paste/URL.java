@@ -3,7 +3,7 @@ package uet.soa.pastebin.domain.model.paste;
 import java.util.UUID;
 
 public class URL {
-    private String value;
+    private final String value;
 
     private URL(String value) {
         this.value = value;

@@ -5,19 +5,20 @@ import org.springframework.context.annotation.Configuration;
 import uet.soa.pastebin.application.usecase.impl.CleanupExpiredPastesUseCaseImpl;
 import uet.soa.pastebin.application.usecase.impl.CreatePasteUseCaseImpl;
 import uet.soa.pastebin.application.usecase.impl.RetrievePasteUseCaseImpl;
+import uet.soa.pastebin.domain.repository.ExpirationPolicyRepository;
 import uet.soa.pastebin.domain.repository.PasteRepository;
-import uet.soa.pastebin.domain.service.AnalyticsService;
+import uet.soa.pastebin.domain.repository.RecordRepository;
 
 @Configuration
 public class UseCaseConfig {
     @Bean
-    public CreatePasteUseCaseImpl createPasteUseCaseImpl(PasteRepository pasteRepository) {
-        return new CreatePasteUseCaseImpl(pasteRepository);
+    public CreatePasteUseCaseImpl createPasteUseCaseImpl(PasteRepository pasteRepository, ExpirationPolicyRepository expirationPolicyRepository) {
+        return new CreatePasteUseCaseImpl(pasteRepository, expirationPolicyRepository);
     }
 
     @Bean
-    public RetrievePasteUseCaseImpl retrievePasteUseCaseImpl(PasteRepository pasteRepository, AnalyticsService analyticsService) {
-        return new RetrievePasteUseCaseImpl(pasteRepository, analyticsService);
+    public RetrievePasteUseCaseImpl retrievePasteUseCaseImpl(PasteRepository pasteRepository, RecordRepository recordRepository) {
+        return new RetrievePasteUseCaseImpl(pasteRepository, recordRepository);
     }
 
     @Bean

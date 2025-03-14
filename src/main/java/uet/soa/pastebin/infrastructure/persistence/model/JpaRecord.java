@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "paste_views")
-public class JpaPasteView {
+@Table(name = "records")
+public class JpaRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
@@ -24,7 +24,7 @@ public class JpaPasteView {
     LocalDateTime viewTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "paste_id")
+    @JoinColumn(name = "paste_url")
     @OnDelete(action = OnDeleteAction.CASCADE)
     JpaPaste paste;
 }
