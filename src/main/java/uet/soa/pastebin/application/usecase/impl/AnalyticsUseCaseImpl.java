@@ -5,7 +5,6 @@ import uet.soa.pastebin.application.dto.PasteTimeSeriesResponse;
 import uet.soa.pastebin.application.dto.TimeSeriesPoint;
 import uet.soa.pastebin.application.usecase.AnalyticsUseCase;
 import uet.soa.pastebin.domain.model.analytics.Record;
-import uet.soa.pastebin.domain.model.paste.Paste;
 import uet.soa.pastebin.domain.repository.PasteRepository;
 import uet.soa.pastebin.domain.repository.RecordRepository;
 
@@ -52,17 +51,21 @@ public class AnalyticsUseCaseImpl implements AnalyticsUseCase {
         pasteRepository.findByUrl(pasteUrl)
                 .orElseThrow(() -> new IllegalArgumentException("Paste not found"));
 
-        List<Record> records = recordRepository.findAllInRangeByPasteUrl(pasteUrl, startTime, endTime);
-
+        List<Record> records = recordRepository.findAllInRangeByPasteUrl(pasteUrl,
+                startTime, endTime);
         int totalViews = records.size();
 
+        // Normalize startTime to the beginning of the slot for consistency
+        LocalDateTime normalizedStartTime = normalizeStartTime(startTime, granularity, interval);
+
+        // Group records by their truncated time slots
         Map<LocalDateTime, Long> viewsByTimeSlot = records.stream()
                 .collect(Collectors.groupingBy(
-                        record -> record.truncateToTimeSlot(granularity, interval, startTime),
+                        record -> record.truncateToTimeSlot(granularity, interval, normalizedStartTime),
                         Collectors.counting()
                 ));
 
-        List<TimeSeriesPoint> timeSeries = generateTimeSeriesPoints(startTime, endTime, granularity, interval, viewsByTimeSlot);
+        List<TimeSeriesPoint> timeSeries = generateTimeSeriesPoints(normalizedStartTime, endTime, granularity, interval, viewsByTimeSlot);
 
         return new PasteTimeSeriesResponse(pasteUrl, totalViews, timeSeries);
     }
@@ -75,7 +78,7 @@ public class AnalyticsUseCaseImpl implements AnalyticsUseCase {
             Map<LocalDateTime, Long> viewsByTimeSlot
     ) {
         List<TimeSeriesPoint> timeSeries = new ArrayList<>();
-        LocalDateTime current = startTime.truncatedTo(granularity);
+        LocalDateTime current = startTime;
 
         while (!current.isAfter(endTime)) {
             int viewCount = viewsByTimeSlot.getOrDefault(current, 0L).intValue();
@@ -84,5 +87,15 @@ public class AnalyticsUseCaseImpl implements AnalyticsUseCase {
         }
 
         return timeSeries;
+    }
+
+    private LocalDateTime normalizeStartTime(LocalDateTime startTime, ChronoUnit granularity, int interval) {
+        return switch (granularity) {
+            case MINUTES -> startTime.truncatedTo(ChronoUnit.MINUTES)
+                    .minusMinutes(startTime.getMinute() % interval);
+            case DAYS -> startTime.truncatedTo(ChronoUnit.DAYS);
+            case MONTHS -> startTime.truncatedTo(ChronoUnit.MONTHS);
+            default -> throw new IllegalArgumentException("Unsupported granularity: " + granularity);
+        };
     }
 }

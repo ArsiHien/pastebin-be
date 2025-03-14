@@ -2,6 +2,7 @@ package uet.soa.pastebin.infrastructure.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import uet.soa.pastebin.application.usecase.impl.AnalyticsUseCaseImpl;
 import uet.soa.pastebin.application.usecase.impl.CleanupExpiredPastesUseCaseImpl;
 import uet.soa.pastebin.application.usecase.impl.CreatePasteUseCaseImpl;
 import uet.soa.pastebin.application.usecase.impl.RetrievePasteUseCaseImpl;
@@ -24,6 +25,11 @@ public class UseCaseConfig {
     @Bean
     public CleanupExpiredPastesUseCaseImpl cleanupExpiredPastesUseCase(PasteRepository pasteRepository) {
         return new CleanupExpiredPastesUseCaseImpl(pasteRepository);
+    }
+
+    @Bean
+    public AnalyticsUseCaseImpl analyticsUseCaseImpl(RecordRepository recordRepository, PasteRepository pasteRepository){
+        return new AnalyticsUseCaseImpl(recordRepository, pasteRepository);
     }
 }
 
