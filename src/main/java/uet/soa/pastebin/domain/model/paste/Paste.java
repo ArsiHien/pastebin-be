@@ -45,10 +45,6 @@ public class Paste {
         }
     }
 
-    public boolean shouldBeDeletedAfterAccess() {
-        return expirationPolicy instanceof BurnAfterReadExpirationPolicy policy && policy.isRead();
-    }
-
     public URL publishUrl() {
         return url;
     }

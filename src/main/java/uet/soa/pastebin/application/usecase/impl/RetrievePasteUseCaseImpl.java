@@ -37,7 +37,7 @@ public class RetrievePasteUseCaseImpl implements RetrievePasteUseCase {
 
         String remainingTime = paste.calculateTimeUntilExpiration();
 
-        if(paste.shouldBeDeletedAfterAccess()){
+        if(paste.isExpired()){
             pasteRepository.delete(paste);
         }
 

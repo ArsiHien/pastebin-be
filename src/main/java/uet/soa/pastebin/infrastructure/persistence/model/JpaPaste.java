@@ -24,7 +24,7 @@ public class JpaPaste {
     int viewCount;
     boolean isRead;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "expiration_policy_id")
     JpaExpirationPolicy expirationPolicy;
 }
