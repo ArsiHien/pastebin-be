@@ -11,6 +11,7 @@ import uet.soa.pastebin.application.usecase.RetrievePasteUseCase;
 
 @RestController
 @RequestMapping("/api/pastes")
+@CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
 public class PasteController {
     private final CreatePasteUseCase createPasteUseCase;

@@ -8,6 +8,7 @@ import uet.soa.pastebin.application.usecase.AnalyticsUseCase;
 
 @RestController
 @RequestMapping("/api/analytics")
+@CrossOrigin(origins = "http://localhost:3000")
 @AllArgsConstructor
 public class AnalyticsController {
     private final AnalyticsUseCase analyticsUseCase;
