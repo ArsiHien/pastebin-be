@@ -4,5 +4,5 @@ import uet.soa.pastebin.application.dto.RetrievePasteResponse;
 
 public interface RetrievePasteUseCase {
 
-    RetrievePasteResponse execute(String url) throws PasteNotFoundException, PasteExpiredException;
+    RetrievePasteResponse execute(String url);
 }

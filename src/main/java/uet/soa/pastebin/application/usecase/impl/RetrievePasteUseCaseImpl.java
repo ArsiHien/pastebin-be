@@ -2,8 +2,6 @@ package uet.soa.pastebin.application.usecase.impl;
 
 import lombok.AllArgsConstructor;
 import uet.soa.pastebin.application.dto.RetrievePasteResponse;
-import uet.soa.pastebin.application.usecase.PasteExpiredException;
-import uet.soa.pastebin.application.usecase.PasteNotFoundException;
 import uet.soa.pastebin.application.usecase.RetrievePasteUseCase;
 import uet.soa.pastebin.domain.model.analytics.Record;
 import uet.soa.pastebin.domain.model.paste.Paste;
@@ -19,17 +17,17 @@ public class RetrievePasteUseCaseImpl implements RetrievePasteUseCase {
     private final RecordRepository recordRepository;
 
     @Override
-    public RetrievePasteResponse execute(String url) throws PasteNotFoundException, PasteExpiredException {
+    public RetrievePasteResponse execute(String url) {
         Optional<Paste> pasteOpt = pasteRepository.findByUrl(url);
         if (pasteOpt.isEmpty()) {
-            throw new PasteNotFoundException("Paste not found for URL: " + url);
+            throw new RuntimeException("Paste not found for URL: " + url);
         }
 
         Paste paste = pasteOpt.get();
 
         if (paste.isExpired()) {
             pasteRepository.delete(paste);
-            throw new PasteExpiredException("Paste has expired for URL: " + url);
+            throw new RuntimeException("Paste has expired for URL: " + url);
         }
 
         paste.onAccess();

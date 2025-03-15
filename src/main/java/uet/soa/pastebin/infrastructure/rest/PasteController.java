@@ -7,8 +7,6 @@ import uet.soa.pastebin.application.dto.CreatePasteRequest;
 import uet.soa.pastebin.application.dto.CreatePasteResponse;
 import uet.soa.pastebin.application.dto.RetrievePasteResponse;
 import uet.soa.pastebin.application.usecase.CreatePasteUseCase;
-import uet.soa.pastebin.application.usecase.PasteExpiredException;
-import uet.soa.pastebin.application.usecase.PasteNotFoundException;
 import uet.soa.pastebin.application.usecase.RetrievePasteUseCase;
 
 @RestController
@@ -25,7 +23,7 @@ public class PasteController {
     }
 
     @GetMapping("/{url}")
-    public ResponseEntity<RetrievePasteResponse> getPaste(@PathVariable String url) throws PasteNotFoundException, PasteExpiredException {
+    public ResponseEntity<RetrievePasteResponse> getPaste(@PathVariable String url) {
         RetrievePasteResponse response = retrievePasteUseCase.execute(url);
         return ResponseEntity.ok(response);
     }
