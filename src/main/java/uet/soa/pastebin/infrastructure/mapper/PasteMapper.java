@@ -6,6 +6,10 @@ import uet.soa.pastebin.domain.model.paste.Paste;
 import uet.soa.pastebin.domain.model.paste.URL;
 import uet.soa.pastebin.infrastructure.persistence.model.JpaExpirationPolicy;
 import uet.soa.pastebin.infrastructure.persistence.model.JpaPaste;
+import uet.soa.pastebin.infrastructure.persistence.model.RedisPaste;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class PasteMapper {
     public static Paste toDomain(JpaPaste jpaPaste) {
@@ -29,4 +33,28 @@ public class PasteMapper {
                 .expirationPolicy(policy)
                 .build();
     }
+
+    public static Paste toDomain(RedisPaste redisPaste) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        Paste.PasteMemento memento = new Paste.PasteMemento(
+                Content.of(redisPaste.getContent()),
+                LocalDateTime.parse(redisPaste.getCreatedAt(), formatter),
+                ExpirationPolicyFactory.create(redisPaste.getExpirationPolicyType(), redisPaste.getExpirationDuration()),
+                URL.of(redisPaste.getUrl()),
+                0
+        );
+        return memento.restore();
+    }
+
+    public static RedisPaste toCache(Paste.PasteMemento memento) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return RedisPaste.builder()
+                .content(memento.getContent().reveal())
+                .url(memento.getUrl().toString())
+                .createdAt(memento.getCreatedAt().format(formatter))
+                .expirationPolicyType(memento.getExpirationPolicy().type().toString())
+                .expirationDuration(memento.getExpirationPolicy().durationAsString())
+                .build();
+    }
+
 }

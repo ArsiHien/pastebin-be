@@ -1,12 +1,16 @@
 package uet.soa.pastebin.domain.model.paste;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import uet.soa.pastebin.domain.model.policy.BurnAfterReadExpirationPolicy;
 import uet.soa.pastebin.domain.model.policy.ExpirationPolicy;
+import uet.soa.pastebin.domain.repository.PasteRepository;
+import uet.soa.pastebin.infrastructure.persistence.repository.PasteRepositoryImpl;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+@NoArgsConstructor
 public class Paste {
     private URL url;
     private Content content;

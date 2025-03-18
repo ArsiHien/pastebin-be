@@ -3,9 +3,7 @@ package uet.soa.pastebin.infrastructure.rest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import uet.soa.pastebin.application.dto.CreatePasteRequest;
-import uet.soa.pastebin.application.dto.CreatePasteResponse;
-import uet.soa.pastebin.application.dto.RetrievePasteResponse;
+import uet.soa.pastebin.application.dto.*;
 import uet.soa.pastebin.application.usecase.CreatePasteUseCase;
 import uet.soa.pastebin.application.usecase.RetrievePasteUseCase;
 
@@ -23,9 +21,15 @@ public class PasteController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{url}")
-    public ResponseEntity<RetrievePasteResponse> getPaste(@PathVariable String url) {
-        RetrievePasteResponse response = retrievePasteUseCase.execute(url);
+    @GetMapping("/{url}/content")
+    public ResponseEntity<ContentResponse> getPaste(@PathVariable String url) {
+        ContentResponse response = retrievePasteUseCase.getContent(url);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{url}/stats")
+    public ResponseEntity<StatsResponse> getStats(@PathVariable String url) {
+        StatsResponse response = retrievePasteUseCase.getStats(url);
         return ResponseEntity.ok(response);
     }
 }

@@ -8,12 +8,14 @@ import java.util.Optional;
 public interface PasteRepository {
     void save(Paste paste);
 
-    Optional<Paste> findByUrl(String url);
+    Optional<Paste> findByUrl(String url, boolean needStats);
 
     List<Paste> findTimedPastes();
 
     void update(Paste paste);
 
     void delete(Paste paste);
+
+    void incrementViewCount(String url);
 
 }

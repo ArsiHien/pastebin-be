@@ -48,7 +48,7 @@ public class AnalyticsUseCaseImpl implements AnalyticsUseCase {
             ChronoUnit granularity,
             int interval
     ) {
-        pasteRepository.findByUrl(pasteUrl)
+        pasteRepository.findByUrl(pasteUrl, true)
                 .orElseThrow(() -> new IllegalArgumentException("Paste not found"));
 
         List<Record> records = recordRepository.findAllInRangeByPasteUrl(pasteUrl,
@@ -95,7 +95,8 @@ public class AnalyticsUseCaseImpl implements AnalyticsUseCase {
                     .minusMinutes(startTime.getMinute() % interval);
             case DAYS -> startTime.truncatedTo(ChronoUnit.DAYS);
             case MONTHS -> startTime.truncatedTo(ChronoUnit.MONTHS);
-            default -> throw new IllegalArgumentException("Unsupported granularity: " + granularity);
+            default ->
+                    throw new IllegalArgumentException("Unsupported granularity: " + granularity);
         };
     }
 }

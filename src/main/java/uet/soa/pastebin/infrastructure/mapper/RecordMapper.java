@@ -10,7 +10,8 @@ import uet.soa.pastebin.infrastructure.persistence.repository.ExpirationPolicyJp
 
 public class RecordMapper {
     public static Record toDomain(JpaRecord jpaRecord, PasteRepository pasteRepository) {
-        Paste paste = pasteRepository.findByUrl(jpaRecord.getPaste().getUrl())
+        Paste paste = pasteRepository.findByUrl(jpaRecord.getPaste().getUrl()
+                        , true)
                 .orElseThrow(() -> new IllegalStateException("Paste not found"));
         return new Record(paste, jpaRecord.getViewTime());
     }

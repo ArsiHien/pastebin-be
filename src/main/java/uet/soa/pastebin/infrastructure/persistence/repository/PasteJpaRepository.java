@@ -1,6 +1,8 @@
 package uet.soa.pastebin.infrastructure.persistence.repository;
 
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import uet.soa.pastebin.infrastructure.persistence.model.JpaPaste;
@@ -19,4 +21,8 @@ public interface PasteJpaRepository extends JpaRepository<JpaPaste, String> {
             """)
     List<JpaPaste> findTimedPastes();
 
+    @Transactional
+    @Modifying
+    @Query("UPDATE JpaPaste p SET p.viewCount = p.viewCount + 1 WHERE p.url = :url")
+    void incrementViewCount(String url);
 }

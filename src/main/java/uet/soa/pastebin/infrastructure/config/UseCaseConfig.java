@@ -6,9 +6,11 @@ import uet.soa.pastebin.application.usecase.impl.AnalyticsUseCaseImpl;
 import uet.soa.pastebin.application.usecase.impl.CleanupExpiredPastesUseCaseImpl;
 import uet.soa.pastebin.application.usecase.impl.CreatePasteUseCaseImpl;
 import uet.soa.pastebin.application.usecase.impl.RetrievePasteUseCaseImpl;
+import uet.soa.pastebin.domain.event.EventPublisher;
 import uet.soa.pastebin.domain.repository.ExpirationPolicyRepository;
 import uet.soa.pastebin.domain.repository.PasteRepository;
 import uet.soa.pastebin.domain.repository.RecordRepository;
+import uet.soa.pastebin.infrastructure.event.SpringEventPublisher;
 
 @Configuration
 public class UseCaseConfig {
@@ -18,8 +20,8 @@ public class UseCaseConfig {
     }
 
     @Bean
-    public RetrievePasteUseCaseImpl retrievePasteUseCaseImpl(PasteRepository pasteRepository, RecordRepository recordRepository) {
-        return new RetrievePasteUseCaseImpl(pasteRepository, recordRepository);
+    public RetrievePasteUseCaseImpl retrievePasteUseCaseImpl(PasteRepository pasteRepository, EventPublisher eventPublisher) {
+        return new RetrievePasteUseCaseImpl(pasteRepository, eventPublisher);
     }
 
     @Bean
@@ -28,8 +30,13 @@ public class UseCaseConfig {
     }
 
     @Bean
-    public AnalyticsUseCaseImpl analyticsUseCaseImpl(RecordRepository recordRepository, PasteRepository pasteRepository){
+    public AnalyticsUseCaseImpl analyticsUseCaseImpl(RecordRepository recordRepository, PasteRepository pasteRepository) {
         return new AnalyticsUseCaseImpl(recordRepository, pasteRepository);
+    }
+
+    @Bean
+    public EventPublisher eventPublisher(PasteRepository pasteRepository, RecordRepository recordRepository) {
+        return new SpringEventPublisher(pasteRepository, recordRepository);
     }
 }
 
