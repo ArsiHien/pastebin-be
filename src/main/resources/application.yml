@@ -17,11 +17,15 @@ logging:
       springframework:
         data:
           redis=DEBUG:
-datasource:
-    url: mysql://root:ZAjMXOUyWqDiIHxReAzuiSPomTzrHtAi@mysql.railway.internal:3306/railway
+  datasource:
+    url: jdbc:mysql://mysql.railway.internal:3306/railway?useSSL=false&serverTimezone=UTC
     username: root
     password: ZAjMXOUyWqDiIHxReAzuiSPomTzrHtAi
     driver-class-name: com.mysql.cj.jdbc.Driver
+  sql:
+    init:
+      mode: always
+
 
 redis:
     host: redis.railway.internal
