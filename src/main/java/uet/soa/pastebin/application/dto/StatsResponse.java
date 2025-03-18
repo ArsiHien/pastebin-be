@@ -1,4 +1,4 @@
 package uet.soa.pastebin.application.dto;
 
-public record StatsResponse(long viewCount, String remainingTime) {
+public record StatsResponse(long viewCount) {
 }
