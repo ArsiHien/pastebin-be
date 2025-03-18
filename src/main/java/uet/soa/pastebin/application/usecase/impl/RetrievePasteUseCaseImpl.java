@@ -1,7 +1,7 @@
 package uet.soa.pastebin.application.usecase.impl;
 
 import lombok.AllArgsConstructor;
-import uet.soa.pastebin.application.dto.ContentResponse;
+import uet.soa.pastebin.application.dto.RetrievePasteResponse;
 import uet.soa.pastebin.application.dto.StatsResponse;
 import uet.soa.pastebin.application.usecase.RetrievePasteUseCase;
 import uet.soa.pastebin.domain.event.EventPublisher;
@@ -18,7 +18,13 @@ public class RetrievePasteUseCaseImpl implements RetrievePasteUseCase {
     private final EventPublisher eventPublisher;
 
     @Override
-    public ContentResponse getContent(String url) {
+    public String getPolicy(String url) {
+        Paste paste = getValidPaste(url, false);
+        return paste.calculateTimeUntilExpiration();
+    }
+
+    @Override
+    public RetrievePasteResponse getPaste(String url) {
         Paste paste = getValidPaste(url, false);
 
         paste.onAccess();
@@ -29,15 +35,16 @@ public class RetrievePasteUseCaseImpl implements RetrievePasteUseCase {
             pasteRepository.delete(paste);
         }
 
-        return new ContentResponse(paste.provideContent());
+        return new RetrievePasteResponse(paste.publishUrl().toString(),
+                paste.provideContent(),
+                paste.calculateTimeUntilExpiration());
     }
 
     @Override
     public StatsResponse getStats(String url) {
         Paste paste = getValidPaste(url, true);
-        String remainingTime = paste.calculateTimeUntilExpiration();
 
-        return new StatsResponse(paste.totalViews(), remainingTime);
+        return new StatsResponse(paste.totalViews());
     }
 
     private Paste getValidPaste(String url, boolean needStats) {

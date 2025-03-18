@@ -1,11 +1,13 @@
 package uet.soa.pastebin.application.usecase;
 
-import uet.soa.pastebin.application.dto.ContentResponse;
+import uet.soa.pastebin.application.dto.RetrievePasteResponse;
 import uet.soa.pastebin.application.dto.StatsResponse;
 
 public interface RetrievePasteUseCase {
 
-    ContentResponse getContent(String url);
+    RetrievePasteResponse getPaste(String url);
 
     StatsResponse getStats(String url);
+
+    String getPolicy(String url);
 }

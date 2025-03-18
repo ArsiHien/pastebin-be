@@ -21,9 +21,14 @@ public class PasteController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/{url}/policy")
+    public ResponseEntity<String> previewContent(@PathVariable String url) {
+        return ResponseEntity.ok(retrievePasteUseCase.getPolicy(url));
+    }
+
     @GetMapping("/{url}/content")
-    public ResponseEntity<ContentResponse> getPaste(@PathVariable String url) {
-        ContentResponse response = retrievePasteUseCase.getContent(url);
+    public ResponseEntity<RetrievePasteResponse> getPaste(@PathVariable String url) {
+        RetrievePasteResponse response = retrievePasteUseCase.getPaste(url);
         return ResponseEntity.ok(response);
     }
 
