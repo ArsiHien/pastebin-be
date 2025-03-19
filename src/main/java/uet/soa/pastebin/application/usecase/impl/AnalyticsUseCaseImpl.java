@@ -37,8 +37,9 @@ public class AnalyticsUseCaseImpl implements AnalyticsUseCase {
     @Override
     public PasteTimeSeriesResponse getMonthlyStatistics(String pasteUrl) {
         LocalDateTime endTime = LocalDateTime.now();
-        LocalDateTime startTime = endTime.minusMonths(1);
-        return getTimeSeriesForPaste(pasteUrl, startTime, endTime, ChronoUnit.DAYS, 1);
+        LocalDateTime startTime = endTime.minusYears(1);
+        return getTimeSeriesForPaste(pasteUrl, startTime, endTime,
+                ChronoUnit.MONTHS, 1);
     }
 
     private PasteTimeSeriesResponse getTimeSeriesForPaste(
@@ -94,9 +95,9 @@ public class AnalyticsUseCaseImpl implements AnalyticsUseCase {
             case MINUTES -> startTime.truncatedTo(ChronoUnit.MINUTES)
                     .minusMinutes(startTime.getMinute() % interval);
             case DAYS -> startTime.truncatedTo(ChronoUnit.DAYS);
-            case MONTHS -> startTime.truncatedTo(ChronoUnit.MONTHS);
-            default ->
-                    throw new IllegalArgumentException("Unsupported granularity: " + granularity);
+            case MONTHS -> startTime.withDayOfMonth(1)
+                    .truncatedTo(ChronoUnit.DAYS);
+            default -> throw new IllegalArgumentException("Unsupported granularity: " + granularity);
         };
     }
 }
