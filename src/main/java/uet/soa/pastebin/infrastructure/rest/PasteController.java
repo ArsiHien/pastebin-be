@@ -22,7 +22,7 @@ public class PasteController {
     }
 
     @GetMapping("/{url}/policy")
-    public ResponseEntity<String> previewContent(@PathVariable String url) {
+    public ResponseEntity<String> getPolicy(@PathVariable String url) {
         return ResponseEntity.ok(retrievePasteUseCase.getPolicy(url));
     }
 
