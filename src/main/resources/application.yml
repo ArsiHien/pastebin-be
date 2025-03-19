@@ -18,7 +18,7 @@ logging:
         data:
           redis=DEBUG:
   datasource:
-    url: jdbc:mysql://mysql.railway.internal:3306/railway?useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://maglev.proxy.rlwy.net:13602/railway?useSSL=false&serverTimezone=UTC
     username: root
     password: ZAjMXOUyWqDiIHxReAzuiSPomTzrHtAi
     driver-class-name: com.mysql.cj.jdbc.Driver
