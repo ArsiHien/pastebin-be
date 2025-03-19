@@ -18,10 +18,11 @@ logging:
         data:
           redis=DEBUG:
   datasource:
-    url: jdbc:mysql://maglev.proxy.rlwy.net:13602/railway?useSSL=false&serverTimezone=UTC
-    username: root
-    password: ZAjMXOUyWqDiIHxReAzuiSPomTzrHtAi
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+ 
   sql:
     init:
       mode: always
